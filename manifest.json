@@ -1,0 +1,29 @@
+{
+	"manifest_version": 3,
+	"name": "OCEAN CLAIM BOT CỦA BẠN NGÀ PHẠM",
+	"version": "1.0",
+	"description": "Ngà Pham",
+	"permissions": ["*://*.walletapp.waveonsui.com/*"],
+	"background": {
+		"service_worker": "background.js"
+	},
+	"action": {
+		"default_icon": {
+			"16": "logo.png",
+			"48": "logo.png",
+			"128": "logo.png"
+		}
+	},
+	"icons": {
+		"16": "logo.png",
+		"48": "logo.png",
+		"128": "logo.png"
+	},
+	"content_scripts": [
+		{
+		"matches": ["*://*.walletapp.waveonsui.com/*"],
+		"js": ["content.js"],
+		"all_frames": true
+		}
+	]
+}

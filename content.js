@@ -46,6 +46,37 @@ function loadAccounts()
 		accounts.push(`#section-setting > div > div:nth-child(2) > div:nth-child(${i}) > button`);
 	}
 }
+function clickClaimNow(){
+  var buttons = document.querySelectorAll('button');
+  // Duyệt qua tất cả các button để tìm button có thẻ con chứa "Claim Now"
+  var targetButton = Array.prototype.find.call(buttons, function(button) {
+      return Array.prototype.some.call(button.getElementsByTagName('*'), function(child) {
+          return child.textContent.trim() === 'Claim Now';
+      });
+  });
+
+  // Nếu tìm thấy phần tử, thực hiện click
+  if (targetButton) {
+    targetButton.click();
+  }
+}
+
+function clickClaim(){
+  var buttons = document.querySelectorAll('button');
+  // Duyệt qua tất cả các button để tìm button có thẻ con chứa "Claim Now"
+  var targetButton = Array.prototype.find.call(buttons, function(button) {
+      return Array.prototype.some.call(button.getElementsByTagName('*'), function(child) {
+          return child.textContent.trim() === 'Claim';
+      });
+  });
+
+  // Nếu tìm thấy phần tử, thực hiện click
+  if (targetButton) {
+    targetButton.click();
+    return true;
+  }
+  return false;
+}
 
 // Bắt đầu vòng lặp click tự động
 setTimeout(function() {
@@ -71,14 +102,14 @@ setTimeout(function() {
     }
     setTimeout(function() {
 
-    // Nút Claim ở ngoài của ví để vào Ocean Game
-      clickElementBySelector("#section-home > div > div > div.block-claim.flex.flex-row.relative.z-0 > div.item-1 > div._item-1_2 > div.ml-auto.mt-3 > button > span");
-      
+      // Nút Claim ở ngoài của ví để vào Ocean Game
+      clickClaimNow();
+
       setTimeout(() => {
         // Nút Claim OCEAN ở trong Ocean Game
         for(let i = 0; i < 70; i++){
           let claimTimeOut = setTimeout(function() {		
-            let claimButton = clickElementBySelector("#section-transaction > div.block-data.h-full > div > div.overlay.relative > div > div > div > button");
+            let claimButton = clickClaim();
             if(!claimButton){
               clearMyTimeOut();
               // không có nút claim sẽ đổi acc khác

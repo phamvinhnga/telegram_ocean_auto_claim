@@ -81,48 +81,56 @@ function clickClaim(){
 // Bắt đầu vòng lặp click tự động
 setTimeout(function() {
 
-  loadAccounts();
+  try
+  {
+    loadAccounts();
 
-  let telegramOceanProcessingTurn = localStorage.getItem('TelegramOceanProcessingTurn', processingTurn);
-  if(telegramOceanProcessingTurn){
-    processingTurn = telegramOceanProcessingTurn;
-  }
-      
-  // Mở menu
-  clickElementBySelector("#section-home > div > header > button.relative.p-4");
-
-  setTimeout(() => {
-    // Chon user
-    let hasUser = clickElementBySelector(accounts[processingTurn]);
-    if(!hasUser){
-      processingTurn = accountCount;
-      clearMyTimeOut();
-      refreshPage(0);
-      return;
+    let telegramOceanProcessingTurn = localStorage.getItem('TelegramOceanProcessingTurn', processingTurn);
+    if(telegramOceanProcessingTurn){
+      processingTurn = telegramOceanProcessingTurn;
     }
-    setTimeout(function() {
-
-      // Nút Claim ở ngoài của ví để vào Ocean Game
-      clickClaimNow();
-
-      setTimeout(() => {
-        // Nút Claim OCEAN ở trong Ocean Game
-        for(let i = 0; i < 70; i++){
-          let claimTimeOut = setTimeout(function() {		
-            let claimButton = clickClaim();
-            if(!claimButton){
-              clearMyTimeOut();
-              // không có nút claim sẽ đổi acc khác
-              refreshPage(0);
-              return;
-            }
-          }, 100);
-          timeouts.push(claimTimeOut);
-        }
+        
+    // Mở menu
+    clickElementBySelector("#section-home > div > header > button.relative.p-4");
+  
+    setTimeout(() => {
+      // Chon user
+      let hasUser = clickElementBySelector(accounts[processingTurn]);
+      if(!hasUser){
+        processingTurn = accountCount;
+        clearMyTimeOut();
+        refreshPage(0);
+        return;
+      }
+      setTimeout(function() {
+  
+        // Nút Claim ở ngoài của ví để vào Ocean Game
+        clickClaimNow();
+  
+        setTimeout(() => {
+          // Nút Claim OCEAN ở trong Ocean Game
+          for(let i = 0; i < 70; i++){
+            let claimTimeOut = setTimeout(function() {		
+              let claimButton = clickClaim();
+              if(!claimButton){
+                clearMyTimeOut();
+                // không có nút claim sẽ đổi acc khác
+                refreshPage(0);
+                return;
+              }
+            }, 100);
+            timeouts.push(claimTimeOut);
+          }
+        }, 1000);
+        // quay lại
       }, 1000);
-      // quay lại
-    }, 1000);
-  }, 2000)
+    }, 2000)
+  }
+  catch{
+
+  }
+
+  
 }, 1000);
 
 // 15s sẽ làm mới trang

@@ -96,7 +96,7 @@ setTimeout(function() {
           // Nút Claim OCEAN ở trong Ocean Game
           for(let i = 0; i < 70; i++){
             let claimTimeOut = setTimeout(function() {		
-              let claimButton = clickClaimNow();
+              let claimButton = clickElementBySelector("#section-transaction > div.block-data.h-full > div > div.overlay.relative > div > div > div > button");
               if(!claimButton){
                 clearMyTimeOut();
                 // không có nút claim sẽ đổi acc khác
@@ -106,7 +106,7 @@ setTimeout(function() {
             }, 100);
             timeouts.push(claimTimeOut);
           }
-        }, 1000);
+        }, 2000);
         // quay lại
       }, 1000);
     }, 2000)

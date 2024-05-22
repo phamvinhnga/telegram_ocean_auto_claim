@@ -58,21 +58,6 @@ function clickClaimNow(){
   // Nếu tìm thấy phần tử, thực hiện click
   if (targetButton) {
     targetButton.click();
-  }
-}
-
-function clickClaim(){
-  var buttons = document.querySelectorAll('button');
-  // Duyệt qua tất cả các button để tìm button có thẻ con chứa "Claim Now"
-  var targetButton = Array.prototype.find.call(buttons, function(button) {
-      return Array.prototype.some.call(button.getElementsByTagName('*'), function(child) {
-          return child.textContent.trim() === 'Claim';
-      });
-  });
-
-  // Nếu tìm thấy phần tử, thực hiện click
-  if (targetButton) {
-    targetButton.click();
     return true;
   }
   return false;
@@ -111,7 +96,7 @@ setTimeout(function() {
           // Nút Claim OCEAN ở trong Ocean Game
           for(let i = 0; i < 70; i++){
             let claimTimeOut = setTimeout(function() {		
-              let claimButton = clickClaim();
+              let claimButton = clickClaimNow();
               if(!claimButton){
                 clearMyTimeOut();
                 // không có nút claim sẽ đổi acc khác

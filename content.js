@@ -1,9 +1,7 @@
-let accounts = []; 
+let accounts = [];
 // so luong user
 let accountCount = 100;
 let processingTurn = 0;
-let flag = true;
-let timeouts = [];
 
 // Thực hiện click vào phần tử bằng JavaScript selector
 function clickElementBySelector(selector) {
@@ -12,111 +10,68 @@ function clickElementBySelector(selector) {
     element.click();
     return true;
   }
-  else{
+  else {
     console.log("không tìm thấy", selector)
     return false;
   }
 }
-function clearMyTimeOut(){
-  for (let i = 0; i < timeouts.length; i++) {
-    clearTimeout(timeouts[i]);
-  }
-}
-
-  // Làm mới trang
-function refreshPage(secount){
-  let refreshTimeout = setTimeout(function() {			
-    processingTurn++;
-    if(processingTurn >= accountCount){
-      processingTurn = 0;
-    }
-    // Đổi account
-    localStorage.setItem('TelegramOceanProcessingTurn', processingTurn);
-    window.location.href = 'https://walletapp.waveonsui.com/';
-  }, secount);
-  timeouts.push(refreshTimeout);
-}
-
 
 // Tạo danh sách accounts
-function loadAccounts()
-{
-	for(let i = 1; i <= accountCount; i++)
-	{
-		accounts.push(`#section-setting > div > div:nth-child(2) > div:nth-child(${i}) > button`);
-	}
-}
-function clickClaimNow(){
-  var buttons = document.querySelectorAll('button');
-  // Duyệt qua tất cả các button để tìm button có thẻ con chứa "Claim Now"
-  var targetButton = Array.prototype.find.call(buttons, function(button) {
-      return Array.prototype.some.call(button.getElementsByTagName('*'), function(child) {
-          return child.textContent.trim() === 'Claim Now';
-      });
-  });
-
-  // Nếu tìm thấy phần tử, thực hiện click
-  if (targetButton) {
-    targetButton.click();
-    return true;
+function loadAccounts() {
+  for (let i = 1; i <= accountCount; i++) {
+    accounts.push(`#section-setting > div > div:nth-child(2) > div:nth-child(${i}) > button`);
   }
-  return false;
 }
 
-// Bắt đầu vòng lặp click tự động
-setTimeout(function() {
-
-  try
-  {
-    loadAccounts();
-
-    let telegramOceanProcessingTurn = localStorage.getItem('TelegramOceanProcessingTurn', processingTurn);
-    if(telegramOceanProcessingTurn){
-      processingTurn = telegramOceanProcessingTurn;
-    }
-        
+function process() {
+  // Bắt đầu vòng lặp click tự động
+  try {
+    console.log(processingTurn);
     // Mở menu
     clickElementBySelector("#section-home > div > header > button.relative.p-4");
-  
     setTimeout(() => {
       // Chon user
       let hasUser = clickElementBySelector(accounts[processingTurn]);
-      if(!hasUser){
+      if (!hasUser) {
         processingTurn = accountCount;
-        clearMyTimeOut();
-        refreshPage(0);
+        nextAccount(1000);
         return;
       }
-      setTimeout(function() {
-  
+      setTimeout(() => {
         // Nút Claim ở ngoài của ví để vào Ocean Game
-        clickClaimNow();
-  
+        clickElementBySelector("#section-home > div > div > div.swiper.swiper-initialized.swiper-horizontal.mySwiper > div.swiper-wrapper > div.swiper-slide.swiper-slide-active > div > div.item-1 > div._item-1_2 > div.ml-auto.mt-3 > button");
+
         setTimeout(() => {
           // Nút Claim OCEAN ở trong Ocean Game
-          for(let i = 0; i < 70; i++){
-            let claimTimeOut = setTimeout(function() {		
-              let claimButton = clickElementBySelector("#section-transaction > div.block-data.h-full > div > div.overlay.relative > div > div > div > button");
-              if(!claimButton){
-                clearMyTimeOut();
-                // không có nút claim sẽ đổi acc khác
-                refreshPage(0);
-                return;
-              }
-            }, 100);
-            timeouts.push(claimTimeOut);
+          let claimButton = clickElementBySelector("#section-transaction > div.block-data.h-full > div > div.overlay.relative > div > div > div > button");
+          if (claimButton) {
+            nextAccount(15000);
           }
-        }, 2000);
-        // quay lại
+          else {
+            nextAccount(1000);
+          }
+        }, 1000);
+
       }, 1000);
-    }, 2000)
+    }, 1000);
   }
-  catch{
-
+  catch {
+    alert("Có lỗi cmnr huhu");
   }
+}
 
-  
-}, 1000);
+function nextAccount(timeout) {
+  setTimeout(() => {
+    processingTurn++;
+    if (processingTurn >= accountCount) {
+      processingTurn = 0;
+    }
+    history.back();
+    setTimeout(() => {
+      process();
+    }, 1000);
+  }, timeout);
+}
 
-// 15s sẽ làm mới trang
-refreshPage(15000);
+loadAccounts();
+process();

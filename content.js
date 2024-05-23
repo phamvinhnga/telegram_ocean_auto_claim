@@ -28,9 +28,11 @@ function process() {
   try {
     console.log(processingTurn);
     // Mở menu
+    console.log("Mở menu");
     clickElementBySelector("#section-home > div > header > button.relative.p-4");
     setTimeout(() => {
       // Chon user
+      console.log("Chon user");
       let hasUser = clickElementBySelector(accounts[processingTurn]);
       if (!hasUser) {
         processingTurn = accountCount;
@@ -38,10 +40,12 @@ function process() {
         return;
       }
       setTimeout(() => {
+        console.log("Nút Claim ở ngoài của ví để vào Ocean Game");
         // Nút Claim ở ngoài của ví để vào Ocean Game
         clickElementBySelector("#section-home > div > div > div.swiper.swiper-initialized.swiper-horizontal.mySwiper > div.swiper-wrapper > div.swiper-slide.swiper-slide-active > div > div.item-1 > div._item-1_2 > div.ml-auto.mt-3 > button");
 
         setTimeout(() => {
+          console.log("Nút Claim OCEAN ở trong Ocean Game");
           // Nút Claim OCEAN ở trong Ocean Game
           let claimButton = clickElementBySelector("#section-transaction > div.block-data.h-full > div > div.overlay.relative > div > div > div > button");
           if (claimButton) {
@@ -66,12 +70,16 @@ function nextAccount(timeout) {
     if (processingTurn >= accountCount) {
       processingTurn = 0;
     }
-    history.back();
-    setTimeout(() => {
-      process();
-    }, 1000);
+    localStorage.setItem('TelegramOceanProcessingTurn', processingTurn);
+    window.location.href = 'https://walletapp.waveonsui.com/';
   }, timeout);
 }
 
 loadAccounts();
-process();
+let telegramOceanProcessingTurn = localStorage.getItem('TelegramOceanProcessingTurn', processingTurn);
+if (telegramOceanProcessingTurn) {
+  processingTurn = telegramOceanProcessingTurn;
+}
+setTimeout(() => {
+  process();
+}, 500)
